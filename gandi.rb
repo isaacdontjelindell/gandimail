@@ -27,18 +27,21 @@ def main()
     if options[:version]
         api_version = server.call("version.info", apikey)
         puts "Using API version #{api_version['api_version']}"
+        exit
     end
     if options[:list]
         puts get_current_forwards(apikey, server, options)
+        exit
     end
     if options[:create]
         new_forward = create_new_forward(apikey, server, options)
         puts "Added new forward: #{new_forward}"
-        #puts get_current_forwards(apikey, server, options)
+        exit
     end
     if options[:delete]
         del_forward = delete_existing_forward(apikey, server, options)
         puts "Deleted forward: #{del_forward}"
+        exit
     end
 end
 
@@ -85,14 +88,14 @@ def get_command_line_options
             options[:version] = true
         end
 
-        opts.on("-c", "--create 'from@test.com to@test.com'", "create a new forwarding address") do |s|
+        opts.on("-c", "--create 'FROM TO@test.com'", "create a new forwarding address") do |s|
             addresses = s.split      
             options[:create] = true
             options[:from] = addresses[0]
             options[:to] = addresses[1]
         end
 
-        opts.on("-d", "--delete 'FROM_ADDR'", "delete an existing forwarding address") do |from|
+        opts.on("-d", "--delete 'FROM'", "delete an existing forwarding address") do |from|
             options[:delete] = true
             options[:from] = from
         end
@@ -103,6 +106,11 @@ def get_command_line_options
 
         opts.on("-f", "--fqdn FQDN", "specify the domain to administrate") do |fqdn|
             options[:fqdn] = fqdn
+        end
+
+        opts.on_tail("-h", "--help", "show this message") do
+            puts opts
+            exit
         end
         
     end.parse!
