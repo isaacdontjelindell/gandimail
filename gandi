@@ -94,7 +94,7 @@ def get_command_line_options
             options[:to] = addresses[1]
         end
 
-        opts.on("-d", "--delete 'FROM'", "delete an existing forwarding address") do |from|
+        opts.on("-d", "--delete FROM", "delete an existing forwarding address") do |from|
             options[:delete] = true
             options[:from] = from
         end
