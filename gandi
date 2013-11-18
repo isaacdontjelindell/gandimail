@@ -81,7 +81,7 @@ def get_command_line_options
     options[:fqdn] = "isaacdontjelindell.com"
 
     opts = OptionParser.new do |opts|
-        opts.banner = "Usage: gandi.rb [options]"
+        opts.banner = "Usage: gandi [options]"
 
         opts.on("-v", "--version", "show Gandi API version") do 
             options[:version] = true
