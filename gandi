@@ -30,17 +30,14 @@ def main()
         api_version = server.call("version.info", apikey)
         puts "Using API version #{api_version['api_version']}"
         exit
-    end
-    if options[:list]
+    elsif options[:list]
         puts get_current_forwards(apikey, server, options)
         exit
-    end
-    if options[:create]
+    elsif options[:create]
         new_forward = create_new_forward(apikey, server, options)
         puts "Added new forward: #{new_forward}"
         exit
-    end
-    if options[:delete]
+    elsif options[:delete]
         del_forward = delete_existing_forward(apikey, server, options)
         puts "Deleted forward: #{del_forward}"
         exit
@@ -80,10 +77,10 @@ def get_command_line_options
     options = {}
 
     # special case for personal use :)
-    # can be overridden with -f "fqdn.com"
+    # can (and should!) be overridden with -f "fqdn.com"
     options[:fqdn] = "isaacdontjelindell.com"
 
-    OptionParser.new do |opts|
+    opts = OptionParser.new do |opts|
         opts.banner = "Usage: gandi.rb [options]"
 
         opts.on("-v", "--version", "show Gandi API version") do 
@@ -115,7 +112,15 @@ def get_command_line_options
             exit
         end
         
-    end.parse!
+    end
+    
+    begin
+        opts.parse!
+    rescue OptionParser::InvalidOption => e
+        puts e
+        puts opts
+        exit
+    end
 
     return options
 end
