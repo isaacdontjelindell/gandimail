@@ -22,30 +22,36 @@ def main()
     ## 24-character API needs to be set as an environment variable
     apikey = ENV['GANDI_API_KEY']  
 
-    api_version = server.call("version.info", apikey)
-    puts "Using API version #{api_version['api_version']}"
-
-
     options = get_command_line_options
 
-
-    #if options[:create]
-        # create a new forward
+    if options[:version]
+        api_version = server.call("version.info", apikey)
+        puts "Using API version #{api_version['api_version']}"
+    end
     if options[:list]
         puts get_current_forwards(apikey, server, options)
     end
     if options[:create]
-        puts create_new_forward(apikey, server, options)
-        puts get_current_forwards(apikey, server, options)
+        new_forward = create_new_forward(apikey, server, options)
+        puts "Added new forward: #{new_forward}"
+        #puts get_current_forwards(apikey, server, options)
     end
+    if options[:delete]
+        del_forward = delete_existing_forward(apikey, server, options)
+        puts "Deleted forward: #{del_forward}"
+    end
+end
 
+def delete_existing_forward(apikey, server, options)
+    source = options[:from]
+
+    return server.call("domain.forward.delete", apikey, options[:fqdn], source)
 end
 
 def create_new_forward(apikey, server, options)
     source = options[:from]
 
     dests = {'destinations' => [options[:to]]}
-    puts dests
 
     return server.call("domain.forward.create", apikey, options[:fqdn], source, dests)
 end
@@ -75,8 +81,8 @@ def get_command_line_options
     OptionParser.new do |opts|
         opts.banner = "Usage: gandi.rb [options]"
 
-        opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-            options[:verbose] = v
+        opts.on("-v", "--version", "show Gandi API version") do 
+            options[:version] = true
         end
 
         opts.on("-c", "--create 'from@test.com to@test.com'", "create a new forwarding address") do |s|
@@ -84,6 +90,11 @@ def get_command_line_options
             options[:create] = true
             options[:from] = addresses[0]
             options[:to] = addresses[1]
+        end
+
+        opts.on("-d", "--delete 'FROM_ADDR'", "delete an existing forwarding address") do |from|
+            options[:delete] = true
+            options[:from] = from
         end
 
         opts.on("-l", "--list", "list all existing forwards") do
@@ -96,7 +107,6 @@ def get_command_line_options
         
     end.parse!
 
-    p options
     return options
 end
 
