@@ -48,7 +48,7 @@ Note: I have a special case hard coded in for my personal use. If `-f FQDN` isn'
 
 ###Contributing
 
-If you do something with this, fork it and send me a pull request. (Or don't. It's up you you.)
+If you do something with this, fork it and send me a pull request. (Or don't. It's up to you.)
 
 ###License 
 
