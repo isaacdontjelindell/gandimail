@@ -32,15 +32,26 @@ def main()
     #if options[:create]
         # create a new forward
     if options[:list]
-        puts get_current_forwards(apikey, server, options[:fqdn])
+        puts get_current_forwards(apikey, server, options)
+    end
+    if options[:create]
+        puts create_new_forward(apikey, server, options)
+        puts get_current_forwards(apikey, server, options)
     end
 
-    return server
 end
 
-def get_current_forwards(apikey, server, fqdn)
-    forward_list = server.call("domain.forward.list", apikey, fqdn)
-    return forward_list
+def create_new_forward(apikey, server, options)
+    source = options[:from]
+
+    dests = {'destinations' => [options[:to]]}
+    puts dests
+
+    return server.call("domain.forward.create", apikey, options[:fqdn], source, dests)
+end
+
+def get_current_forwards(apikey, server, options)
+    return server.call("domain.forward.list", apikey, options[:fqdn])
 end
 
 def get_domains(apikey, server)
