@@ -43,7 +43,7 @@ gandi -d me -f test.com
 ```
 
 
-Note: I have a special case hard coded in for my personal use. If `-f FQDN` isn't specified, this script will try to use `isaacdontjelindell.com` as the domain. Obviously, this won't work for you. Please always specify `-f yourdomain.com` to manage your own domain.
+**Note**: I have a special case hard coded in for my personal use. If `-f FQDN` isn't specified, this script will try to use `isaacdontjelindell.com` as the domain. Obviously, this won't work for you. Please always specify `-f yourdomain.com` to manage your own domain.
 
 
 ###Contributing
